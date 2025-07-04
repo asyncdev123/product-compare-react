@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {bindActionCreators} from 'redux'
-import {Compare, ProductList} from '../../components'
+import {Compare, ProductList, SortToggle} from '../../components'
 import * as productActions from '../../actions/product'
 import {connect} from 'react-redux'
 
@@ -10,7 +10,7 @@ class Home extends Component {
   }
 
   render() {
-    const {products, actions} = this.props;
+    const {products, actions, sortOrder} = this.props;
     const compareProducts = products.filter(product => product.compare);
 
     return (
@@ -20,6 +20,7 @@ class Home extends Component {
             <h2 className="mb-3">Compare Products</h2>
           </div>
         </div>
+        <SortToggle sortOrder={sortOrder} toggleSort={actions.togglePriceSort} />
         <ProductList products={products} compare={actions.compare}/>
         {compareProducts.length >= 2 &&
           <Compare products={compareProducts}/>
@@ -31,7 +32,8 @@ class Home extends Component {
 
 export default connect(
   state => ({
-    products: state.product.products
+    products: state.product.products,
+    sortOrder: state.product.sortOrder
   }),
   dispatch => ({
     actions: bindActionCreators(productActions, dispatch)
